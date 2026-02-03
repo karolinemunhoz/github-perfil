@@ -1,41 +1,62 @@
-//1. importação
-//2. código do componente
-
 import { useState } from 'react';
 
 import Perfil from './components/Perfil';
-import Formulario from './components/Formulario';
 import ReposList from './components/ReposList';
 
-
-
-
 function App() {
-
-  const [formularioEstaVisivel, setFormularioEstaVisivel] = useState(true);
+  const [inputUsuario, setInputUsuario] = useState('');
   const [nomeUsuario, setNomeUsuario] = useState('');
-  return(
-    <>
-    <input type="text" onBlur={(e) => setNomeUsuario(e.target.value)} />
+  const [erro, setErro] = useState('');
 
-    {nomeUsuario.length > 4 && (
-      <>
-        <Perfil nomeUsuario={nomeUsuario}/>
-        <ReposList nomeUsuario={nomeUsuario}/>
-      </>
-    )}
+  const buscarUsuario = () => {
+    if (!inputUsuario.trim()) return;
 
-    {/* {formularioEstaVisivel && (
-      <Formulario />
-    )}
-    <button onClick={() => setFormularioEstaVisivel(!formularioEstaVisivel)} type='button'>toggle form</button> */}
+    setErro('');
+    setNomeUsuario(inputUsuario);
+  };
 
-    </>
-  )
+  return (
+    <main className="container">
+      <section style={{ textAlign: 'center', margin: '40px 0' }}>
+        <h2>Digite seu nome de usuário do GitHub</h2>
+
+        <input
+          type="text"
+          value={inputUsuario}
+          onChange={e => setInputUsuario(e.target.value)}
+          placeholder="ex: karolinemunhoz"
+          style={{ padding: '8px', marginTop: '16px', width: '250px' }}
+        />
+
+        <br />
+
+        <button
+          onClick={buscarUsuario}
+          style={{
+            marginTop: '12px',
+            padding: '8px 16px',
+            backgroundColor: 'var(--corPrincipal)',
+            color: 'var(--corSecundaria)',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'pointer'
+          }}
+        >
+          Buscar perfil
+        </button>
+
+        {erro && <p style={{ color: 'red', marginTop: '12px' }}>{erro}</p>}
+      </section>
+
+      {nomeUsuario && (
+        <>
+          <Perfil nomeUsuario={nomeUsuario} />
+          <ReposList nomeUsuario={nomeUsuario} setErro={setErro} />
+        </>
+      )}
+    </main>
+  );
 }
 
-export default App
+export default App;
 
-// true + true = true 
-// true + false = false (!true = false)
-// false + false = true (!false = true)
